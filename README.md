@@ -58,5 +58,5 @@ This project is a full-stack application built using **Spring Boot** (backend) a
 
 1. Clone the repo and navigate to the backend folder:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/vishnu-vardhan-chary/UsersManagement.git
    cd backend
