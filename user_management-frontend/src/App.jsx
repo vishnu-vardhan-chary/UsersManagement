@@ -20,11 +20,22 @@ function App() {
 
   const sortBy = (field) => {
     const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
+
     const sorted = [...users].sort((a, b) => {
-      let aVal = a[field]?.toString().toLowerCase();
-      let bVal = b[field]?.toString().toLowerCase();
-      if (aVal < bVal) return order === "asc" ? -1 : 1;
-      if (aVal > bVal) return order === "asc" ? 1 : -1;
+      const aVal = a[field];
+      const bVal = b[field];
+
+      const isNumber = typeof aVal === "number" && typeof bVal === "number";
+
+      if (isNumber) {
+        return order === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      const aStr = aVal?.toString().toLowerCase() || "";
+      const bStr = bVal?.toString().toLowerCase() || "";
+
+      if (aStr < bStr) return order === "asc" ? -1 : 1;
+      if (aStr > bStr) return order === "asc" ? 1 : -1;
       return 0;
     });
 

@@ -1,12 +1,19 @@
 package com.example.controller;
 
-import com.example.entity.User;
-import com.example.repository.UserRepository;
-import com.example.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.entity.User;
+import com.example.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,26 +22,19 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-
-    @PostMapping("/fetch")
-    public String fetchAndSaveUsers() {
-        userService.fetchAndStoreExternalUsers();
-        return "Users fetched and saved successfully";
-    }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/search")
     public List<User> searchUsers(@RequestParam String query) {
-        return userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query);
+        return userService.searchUsers(query);
     }
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userService.getUserById(id);
     }
 }
