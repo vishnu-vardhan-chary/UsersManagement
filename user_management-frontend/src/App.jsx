@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [originalUsers, setOriginalUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -11,10 +10,7 @@ function App() {
   useEffect(() => {
     fetch("http://localhost:8787/api/users")
       .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        setOriginalUsers(data);
-      })
+      .then((data) => setUsers(data))
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
@@ -45,14 +41,20 @@ function App() {
   };
 
   const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
+    const value = e.target.value;
     setSearchQuery(value);
-    const filtered = originalUsers.filter(
-      (user) =>
-        user.name.toLowerCase().includes(value) ||
-        user.email.toLowerCase().includes(value)
-    );
-    setUsers(filtered);
+
+    if (value.trim() === "") {
+      fetch("http://localhost:8787/api/users")
+        .then((res) => res.json())
+        .then((data) => setUsers(data))
+        .catch((err) => console.error("Error fetching users:", err));
+    } else {
+      fetch(`http://localhost:8787/api/users/search?query=${value}`)
+        .then((res) => res.json())
+        .then((data) => setUsers(data))
+        .catch((err) => console.error("Error searching users:", err));
+    }
   };
 
   const openUserModal = (id) => {
